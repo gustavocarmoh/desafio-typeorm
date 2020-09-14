@@ -1,6 +1,4 @@
-// eslint-disable-next-line import/no-unresolved
 import 'reflect-metadata';
-// eslint-disable-next-line import/no-unresolved
 import 'dotenv/config';
 
 import express, { Request, Response, NextFunction } from 'express';
