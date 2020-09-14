@@ -1,26 +1,31 @@
-import { getCustomRepository } from 'typeorm';
 import { Router } from 'express';
 import multer from 'multer';
-import uploadConfig from '../config/upload';
+import { getCustomRepository } from 'typeorm';
 
 import TransactionsRepository from '../repositories/TransactionsRepository';
 import CreateTransactionService from '../services/CreateTransactionService';
 import DeleteTransactionService from '../services/DeleteTransactionService';
 import ImportTransactionsService from '../services/ImportTransactionsService';
 
-const transactionsRouter = Router();
+import uploadConfig from '../config/upload';
+
 const upload = multer(uploadConfig);
 
-transactionsRouter.get('/', async (req, res) => {
+const transactionsRouter = Router();
+
+transactionsRouter.get('/', async (request, response) => {
+  // TODO
   const transactionsRepository = getCustomRepository(TransactionsRepository);
+
   const transactions = await transactionsRepository.find();
   const balance = await transactionsRepository.getBalance();
 
-  return res.json({ transactions, balance });
+  return response.json({ transactions, balance });
 });
 
-transactionsRouter.post('/', async (req, res) => {
-  const { title, value, type, category } = req.body;
+transactionsRouter.post('/', async (request, response) => {
+  // TODO
+  const { title, value, type, category } = request.body;
 
   const createTransaction = new CreateTransactionService();
 
@@ -31,26 +36,30 @@ transactionsRouter.post('/', async (req, res) => {
     category,
   });
 
-  return res.json(transaction);
+  return response.json(transaction);
 });
 
-transactionsRouter.delete('/:id', async (req, res) => {
-  const { id } = req.params;
+transactionsRouter.delete('/:id', async (request, response) => {
+  const { id } = request.params;
+
   const deleteTransaction = new DeleteTransactionService();
 
-  await deleteTransaction.execute({ id });
+  await deleteTransaction.execute(id);
 
-  return res.status(204).send();
+  return response.status(204).send();
 });
 
-transactionsRouter.post('/import', upload.single('file'), async (req, res) => {
-  const importTransaction = new ImportTransactionsService();
+transactionsRouter.post(
+  '/import',
+  upload.single('file'),
+  async (request, response) => {
+    // TODO
+    const importTransactions = new ImportTransactionsService();
 
-  const transactions = await importTransaction.execute({
-    fileName: req.file.filename,
-  });
+    const transactions = await importTransactions.execute(request.file.path);
 
-  return res.json(transactions);
-});
+    return response.json(transactions);
+  },
+);
 
 export default transactionsRouter;
