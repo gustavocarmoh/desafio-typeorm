@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export default class CreateCategorys1599851444667
+export default class CreateTransactions1593876603237
   implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'categorys',
+        name: 'transactions',
         columns: [
           {
             name: 'id',
@@ -17,6 +17,16 @@ export default class CreateCategorys1599851444667
           {
             name: 'title',
             type: 'varchar',
+          },
+          {
+            name: 'type',
+            type: 'varchar',
+          },
+          {
+            name: 'value',
+            type: 'decimal',
+            precision: 10,
+            scale: 2,
           },
           {
             name: 'created_at',
@@ -34,6 +44,6 @@ export default class CreateCategorys1599851444667
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('categorys');
+    await queryRunner.dropTable('transactions');
   }
 }
